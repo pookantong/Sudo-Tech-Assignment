@@ -25,7 +25,7 @@ Real-time seat booking system with distributed locking and event-driven architec
 
 ---
 
-## 3. Booking Flow (ทีละ Step)
+## 3. Booking Flow
 
 1. เลือกหนังที่ต้องการ
 ผู้ใช้เลือกหนังที่ต้องการ ก็จะขึ้น รอบฉายของแต่ละโรงหนัง และ มี hall ใดบ้าง
