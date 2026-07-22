@@ -118,49 +118,6 @@ func (s *SeatLock) Release(
 }
 
 // ====================
-// Extend
-// ====================
-
-var extendScript = redis.NewScript(`
-if redis.call("GET", KEYS[1]) == ARGV[1] then
-    return redis.call("PEXPIRE", KEYS[1], ARGV[2])
-else
-    return 0
-end
-`)
-
-func (s *SeatLock) Extend(
-	ctx context.Context,
-	showtimeID string,
-	seatID string,
-	ownerToken string,
-	ttl time.Duration,
-) error {
-	key := seatLockKey(
-		showtimeID,
-		seatID,
-	)
-
-	res, err := extendScript.Run(
-		ctx,
-		s.client,
-		[]string{key},
-		ownerToken,
-		ttl.Milliseconds(),
-	).Int()
-
-	if err != nil {
-		return err
-	}
-
-	if res == 0 {
-		return ErrLockNotOwned
-	}
-
-	return nil
-}
-
-// ====================
 // Is Locked
 // ====================
 

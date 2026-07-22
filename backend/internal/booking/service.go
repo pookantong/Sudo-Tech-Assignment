@@ -119,12 +119,21 @@ func (s *Service) SelectSeat(
 		seatID.Hex(),
 		ownerToken,
 	); err != nil {
-		if errors.Is(
-			err,
-			cache.ErrLockNotAcquired,
-		) {
+		if errors.Is(err, cache.ErrLockNotAcquired) {
 			return nil, ErrSeatTaken
 		}
+
+		_ = s.repo.LogEvent(
+			ctx,
+			model.EventSystemError,
+			userID,
+			map[string]interface{}{
+				"op":          "lock.Acquire",
+				"showtime_id": showtimeID.Hex(),
+				"seat_id":     seatID.Hex(),
+				"error":       err.Error(),
+			},
+		)
 
 		return nil, err
 	}
@@ -212,8 +221,19 @@ func (s *Service) ConfirmPayment(
 		booking.ShowtimeID.Hex(),
 		booking.SeatID.Hex(),
 	)
-
+	
 	if err != nil {
+		_ = s.repo.LogEvent(
+			ctx,
+			model.EventSystemError,
+			requestingUserID,
+			map[string]interface{}{
+				"op":         "lock.IsLocked",
+				"booking_id": bookingID.Hex(),
+				"error":      err.Error(),
+			},
+		)
+
 		return err
 	}
 
@@ -221,8 +241,6 @@ func (s *Service) ConfirmPayment(
 		return cache.ErrLockNotOwned
 	}
 
-	// No *mongo.Client / session param anymore — see the note on Service
-	// above for why this no longer needs a transaction.
 	if err := s.repo.ConfirmSuccess(
 		ctx,
 		booking.ID,

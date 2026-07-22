@@ -153,6 +153,17 @@ func (w *TimeoutWatcher) handleExpiredKey(
 			err,
 		)
 
+		_ = w.repo.LogEvent(
+			timeoutCtx,
+			model.EventSystemError,
+			pending.UserID,
+			map[string]interface{}{
+				"op":         "MarkTimeout",
+				"booking_id": pending.ID.Hex(),
+				"error":      err.Error(),
+			},
+		)
+
 		return
 	}
 
@@ -196,7 +207,7 @@ func (w *TimeoutWatcher) handleExpiredKey(
 		mq.BookingEvent{
 			Type:       mq.EventBookingTimeout,
 			BookingID:  pending.ID.Hex(),
-			UserID:      pending.UserID.Hex(),
+			UserID:     pending.UserID.Hex(),
 			ShowtimeID: pending.ShowtimeID.Hex(),
 			SeatID:     pending.SeatID.Hex(),
 			SeatLabel:  pending.SeatLabel,

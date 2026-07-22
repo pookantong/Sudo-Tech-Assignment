@@ -315,32 +315,6 @@ func TestExtend_OnlyOwnerCanExtend(
 		)
 	}
 
-	if err := lock.Extend(
-		ctx,
-		showtimeID,
-		seatID,
-		"user-B-token",
-		5*time.Minute,
-	); err != ErrLockNotOwned {
-		t.Fatalf(
-			"expected ErrLockNotOwned for non-owner extend, got: %v",
-			err,
-		)
-	}
-
-	if err := lock.Extend(
-		ctx,
-		showtimeID,
-		seatID,
-		"user-A-token",
-		5*time.Minute,
-	); err != nil {
-		t.Fatalf(
-			"owner should be able to extend lock: %v",
-			err,
-		)
-	}
-
 	time.Sleep(
 		100 * time.Millisecond,
 	)
