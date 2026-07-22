@@ -7,10 +7,6 @@ services:
     restart: unless-stopped
     ports:
       - "27017:27017"
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER:-root}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS:-example}
-      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME:-cinema}
     volumes:
       - mongo_data:/data/db
     healthcheck:
@@ -69,11 +65,6 @@ services:
       - "8080:8080"
     env_file:
       - ./backend/.env
-    environment:
-      MONGO_URI: mongodb://${MONGO_ROOT_USER:-root}:${MONGO_ROOT_PASS:-example}@mongo:27017
-      MONGO_DB_NAME: ${MONGO_DB_NAME:-cinema}
-      REDIS_ADDR: redis:6379
-      KAFKA_BROKERS: kafka:9092
     depends_on:
       mongo:
         condition: service_healthy
@@ -88,11 +79,10 @@ services:
       dockerfile: Dockerfile
     container_name: cinema-frontend
     restart: unless-stopped
+    env_file:
+      - ./frontend/.env
     ports:
-      - "5173:80"
-    environment:
-      VITE_API_BASE_URL: http://localhost:8080
-      VITE_WS_URL: ws://localhost:8080/ws
+      - "5173:5173"
     depends_on:
       - backend
 

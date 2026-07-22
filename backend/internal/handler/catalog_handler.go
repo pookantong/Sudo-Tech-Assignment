@@ -2,7 +2,6 @@ package handler
 
 import (
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -50,50 +49,6 @@ func (h *CatalogHandler) ListMovies(
 	)
 }
 
-type createMovieRequest struct {
-	Title string `json:"title" binding:"required"`
-}
-
-func (h *CatalogHandler) CreateMovie(
-	c *gin.Context,
-) {
-	var req createMovieRequest
-
-	if err := c.ShouldBindJSON(
-		&req,
-	); err != nil {
-		c.JSON(
-			http.StatusBadRequest,
-			gin.H{
-				"error": err.Error(),
-			},
-		)
-
-		return
-	}
-
-	movie, err := h.service.CreateMovie(
-		c.Request.Context(),
-		req.Title,
-	)
-
-	if err != nil {
-		c.JSON(
-			http.StatusInternalServerError,
-			gin.H{
-				"error": "internal error",
-			},
-		)
-
-		return
-	}
-
-	c.JSON(
-		http.StatusCreated,
-		movie,
-	)
-}
-
 // ====================
 // Halls
 // ====================
@@ -119,54 +74,6 @@ func (h *CatalogHandler) ListHalls(
 	c.JSON(
 		http.StatusOK,
 		halls,
-	)
-}
-
-type createHallRequest struct {
-	Name     string `json:"name" binding:"required"`
-	SeatRows int    `json:"seat_rows" binding:"required,min=1"`
-	SeatCols int    `json:"seat_cols" binding:"required,min=1"`
-}
-
-func (h *CatalogHandler) CreateHall(
-	c *gin.Context,
-) {
-	var req createHallRequest
-
-	if err := c.ShouldBindJSON(
-		&req,
-	); err != nil {
-		c.JSON(
-			http.StatusBadRequest,
-			gin.H{
-				"error": err.Error(),
-			},
-		)
-
-		return
-	}
-
-	hall, err := h.service.CreateHall(
-		c.Request.Context(),
-		req.Name,
-		req.SeatRows,
-		req.SeatCols,
-	)
-
-	if err != nil {
-		c.JSON(
-			http.StatusInternalServerError,
-			gin.H{
-				"error": "internal error",
-			},
-		)
-
-		return
-	}
-
-	c.JSON(
-		http.StatusCreated,
-		hall,
 	)
 }
 
@@ -211,86 +118,6 @@ func (h *CatalogHandler) ListShowtimes(
 	c.JSON(
 		http.StatusOK,
 		showtimes,
-	)
-}
-
-type createShowtimeRequest struct {
-	MovieID  string    `json:"movie_id" binding:"required"`
-	HallID   string    `json:"hall_id" binding:"required"`
-	StartsAt time.Time `json:"starts_at" binding:"required"`
-	Price    float64   `json:"price" binding:"required"`
-}
-
-func (h *CatalogHandler) CreateShowtime(
-	c *gin.Context,
-) {
-	var req createShowtimeRequest
-
-	if err := c.ShouldBindJSON(
-		&req,
-	); err != nil {
-		c.JSON(
-			http.StatusBadRequest,
-			gin.H{
-				"error": err.Error(),
-			},
-		)
-
-		return
-	}
-
-	movieID, err := primitive.ObjectIDFromHex(
-		req.MovieID,
-	)
-
-	if err != nil {
-		c.JSON(
-			http.StatusBadRequest,
-			gin.H{
-				"error": "invalid movie_id",
-			},
-		)
-
-		return
-	}
-
-	hallID, err := primitive.ObjectIDFromHex(
-		req.HallID,
-	)
-
-	if err != nil {
-		c.JSON(
-			http.StatusBadRequest,
-			gin.H{
-				"error": "invalid hall_id",
-			},
-		)
-
-		return
-	}
-
-	showtime, err := h.service.CreateShowtime(
-		c.Request.Context(),
-		movieID,
-		hallID,
-		req.StartsAt,
-		req.Price,
-	)
-
-	if err != nil {
-		c.JSON(
-			http.StatusInternalServerError,
-			gin.H{
-				"error": "internal error",
-			},
-		)
-
-		return
-	}
-
-	c.JSON(
-		http.StatusCreated,
-		showtime,
 	)
 }
 

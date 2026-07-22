@@ -40,13 +40,6 @@ var (
 	)
 )
 
-// NOTE: no more *mongo.Client field here. ConfirmSuccess used to need it to
-// open a session/transaction (updating "bookings" + "seats" together), but
-// since Seat status is now derived from Booking rather than stored on a
-// per-showtime Seat document, ConfirmSuccess is a single collection write —
-// no transaction needed, which also means no MongoDB replica-set
-// requirement (a standalone mongod errors on session numbers with
-// "Transaction numbers are only allowed on a replica set member or mongos").
 type Service struct {
 	lock        *cache.SeatLock
 	repo        *repository.BookingRepository

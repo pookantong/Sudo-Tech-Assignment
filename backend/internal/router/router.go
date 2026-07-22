@@ -95,15 +95,5 @@ func NewRouter(
 		bookingHandler.AdminListBookings,
 	)
 
-	admin.POST(
-		"/movies",
-		catalogHandler.CreateMovie,
-	)
-
-	admin.POST(
-		"/showtimes",
-		catalogHandler.CreateShowtime,
-	)
-
 	return r
 }

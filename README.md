@@ -130,6 +130,7 @@ Clone project:
 git clone https://github.com/pookantong/Sudo-Tech-Assignment.git
 cd cinema-booking-backend
 ```
+กำหนด env ของ front-end, back-end
 
 ```bash
 docker compose up --build 

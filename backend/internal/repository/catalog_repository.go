@@ -33,20 +33,6 @@ func NewCatalogRepository(db *mongo.Database) *CatalogRepository {
 // Cinema
 // ====================
 
-func (r *CatalogRepository) CreateCinema(
-	ctx context.Context,
-	cinema *model.Cinema,
-) error {
-	res, err := r.cinemas.InsertOne(ctx, cinema)
-	if err != nil {
-		return err
-	}
-
-	cinema.ID = res.InsertedID.(primitive.ObjectID)
-
-	return nil
-}
-
 func (r *CatalogRepository) GetCinema(
 	ctx context.Context,
 	cinemaID primitive.ObjectID,
@@ -96,20 +82,6 @@ func (r *CatalogRepository) ListCinemas(
 // Movie
 // ====================
 
-func (r *CatalogRepository) CreateMovie(
-	ctx context.Context,
-	movie *model.Movie,
-) error {
-	res, err := r.movies.InsertOne(ctx, movie)
-	if err != nil {
-		return err
-	}
-
-	movie.ID = res.InsertedID.(primitive.ObjectID)
-
-	return nil
-}
-
 func (r *CatalogRepository) ListMovies(
 	ctx context.Context,
 ) ([]model.Movie, error) {
@@ -136,20 +108,6 @@ func (r *CatalogRepository) ListMovies(
 // ====================
 // Hall
 // ====================
-
-func (r *CatalogRepository) CreateHall(
-	ctx context.Context,
-	hall *model.Hall,
-) error {
-	res, err := r.halls.InsertOne(ctx, hall)
-	if err != nil {
-		return err
-	}
-
-	hall.ID = res.InsertedID.(primitive.ObjectID)
-
-	return nil
-}
 
 func (r *CatalogRepository) GetHall(
 	ctx context.Context,
@@ -225,20 +183,6 @@ func (r *CatalogRepository) ListHallsByCinema(
 // ====================
 // Showtime
 // ====================
-
-func (r *CatalogRepository) CreateShowtime(
-	ctx context.Context,
-	showtime *model.Showtime,
-) error {
-	res, err := r.showtimes.InsertOne(ctx, showtime)
-	if err != nil {
-		return err
-	}
-
-	showtime.ID = res.InsertedID.(primitive.ObjectID)
-
-	return nil
-}
 
 func (r *CatalogRepository) ListShowtimesByMovie(
 	ctx context.Context,

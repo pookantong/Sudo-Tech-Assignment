@@ -39,52 +39,9 @@ func (s *Service) ListMovies(
 	return s.repo.ListMovies(ctx)
 }
 
-func (s *Service) CreateMovie(
-	ctx context.Context,
-	title string,
-) (*model.Movie, error) {
-	movie := &model.Movie{
-		Title: title,
-	}
-
-	if err := s.repo.CreateMovie(ctx, movie); err != nil {
-		return nil, err
-	}
-
-	return movie, nil
-}
-
 // ====================
 // Hall
 // ====================
-
-func (s *Service) CreateHall(
-	ctx context.Context,
-	name string,
-	seatRows int,
-	seatCols int,
-) (*model.Hall, error) {
-	hall := &model.Hall{
-		Name:     name,
-		SeatRows: seatRows,
-		SeatCols: seatCols,
-	}
-
-	if err := s.repo.CreateHall(ctx, hall); err != nil {
-		return nil, err
-	}
-
-	if err := s.repo.GenerateSeatsForHall(
-		ctx,
-		hall.ID,
-		seatRows,
-		seatCols,
-	); err != nil {
-		return nil, err
-	}
-
-	return hall, nil
-}
 
 func (s *Service) ListHalls(
 	ctx context.Context,
@@ -152,30 +109,6 @@ func (s *Service) ListShowtimesByMovie(
 	}
 
 	return result, nil
-}
-
-func (s *Service) CreateShowtime(
-	ctx context.Context,
-	movieID primitive.ObjectID,
-	hallID primitive.ObjectID,
-	startsAt time.Time,
-	price float64,
-) (*model.Showtime, error) {
-	showtime := &model.Showtime{
-		MovieID:  movieID,
-		HallID:   hallID,
-		StartsAt: startsAt,
-		Price:    price,
-	}
-
-	if err := s.repo.CreateShowtime(
-		ctx,
-		showtime,
-	); err != nil {
-		return nil, err
-	}
-
-	return showtime, nil
 }
 
 // ====================
