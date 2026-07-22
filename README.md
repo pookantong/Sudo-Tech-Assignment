@@ -129,6 +129,7 @@ Clone project:
 ```bash
 git clone https://github.com/pookantong/Sudo-Tech-Assignment.git
 cd cinema-booking-backend
+```
 
 ```bash
 docker compose up --build 
